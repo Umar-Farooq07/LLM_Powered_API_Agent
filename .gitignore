@@ -36,3 +36,7 @@ env/
 build/
 dist/
 *.egg-info/
+
+
+test2.py
+.env
