@@ -1,0 +1,69 @@
+from docling.document_converter import DocumentConverter
+from langchain_text_splitters import MarkdownTextSplitter, RecursiveCharacterTextSplitter
+
+
+class MarkdownChunker:
+    def __init__(self):
+        self.converter = DocumentConverter()
+        self.separators = [
+            # 1. CODE BLOCKS (strongest boundary)
+            "\n```",                    # Start or end of code block
+
+            # 2. HEADINGS (markdown structure)
+            "\n###### ",                # h6 heading
+            "\n##### ",                 # h5 heading
+            "\n#### ",                  # h4 heading
+            "\n### ",                   # h3 heading
+            "\n## ",                    # h2 heading
+            "\n# ",                     # h1 heading
+
+            # 3. API-SPECIFIC KEYWORDS (common across all API docs)
+            "\nHTTP Method:",           
+            "\nRequest Parameters:",    
+            "\nParameters:",            
+            "\nResponse:",              
+            "\nJSON Response:",         
+            "\nExample:",               
+            "\nEndpoint:",              
+            "\nURL:",                   
+            "\nDescription:",           
+            "\nStatus Codes:",          
+            "\nError Codes:",           
+
+            # 4. LISTS (unordered & ordered)
+            "\n- ",                     # bullet list
+            "\n* ",                     # bullet list alternative
+            "\n+ ",                     # additional bullet format
+            "\n1. ",                    # numbered list
+            "\n2. ",                    # etc., numbers generalize automatically
+
+            # 5. TABLES
+            "\n|",                      # table row
+            "\n:-",                     # table header separator
+
+            # 6. BLOCK QUOTES
+            "\n> ",                     
+
+            # 7. PARAGRAPHS
+            "\n\n",                    # paragraph break
+
+            # 8. FALLBACK SEPARATORS
+            "\n",                      # line break
+            " "                        # final fallback (rarely used)
+        ]
+
+    def convert_to_chunks(self,pdf):
+        result = self.converter.convert(pdf)
+        markdown_form = result.document.export_to_markdown()
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=800,
+            chunk_overlap =100,
+            separators= self.separators
+        )
+        chunks= splitter.split_text(markdown_form)
+        return chunks
+
+
+datum_doc_chunk = MarkdownChunker()
+chunks = datum_doc_chunk.convert_to_chunks("datum_doc.pdf")
+print(chunks)
