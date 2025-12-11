@@ -40,3 +40,5 @@ dist/
 
 test2.py
 .env
+chunking_embedding.py
+
