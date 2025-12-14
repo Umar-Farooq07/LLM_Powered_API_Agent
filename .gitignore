@@ -37,8 +37,14 @@ build/
 dist/
 *.egg-info/
 
-
+#test files
 test2.py
+
+#virtual env
 .env
 
+#vector database
+vector_store/
 
+#Pdfs
+*.pdf
