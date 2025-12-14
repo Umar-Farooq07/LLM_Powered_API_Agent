@@ -21,8 +21,12 @@ embedding_model = HuggingFaceEmbeddings(
 class VectorStoreRetrival:
 
     def __init__(self):
+
+        #Gives unique Id to chat 
         existing = os.listdir("vector_store")
         new_id = len(existing) + 1  
+
+
         self.db= Chroma(
             collection_name= f"chat_{new_id}",
             embedding_function=embedding_model,
@@ -46,13 +50,16 @@ class VectorStoreRetrival:
     
 
 
-
+#converts pdf to markdown format
 Markdown_model= MarkdownChunker()
 Markdown_data = Markdown_model.convert_to_chunks("datum_doc.pdf")
 
+#embedds and stores it in chroma
 db_model= VectorStoreRetrival()
 db_model.create_db(Markdown_data)
 
+
+#takes context and query to give appropriate response
 llm_model = QueryLLM()
 while(True):
     query = input()
