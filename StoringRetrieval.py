@@ -50,22 +50,22 @@ class VectorStoreRetrival:
     
 
 
-#converts pdf to markdown format
-Markdown_model= MarkdownChunker()
-Markdown_data = Markdown_model.convert_to_chunks("datum_doc.pdf")
-
-#embedds and stores it in chroma
-db_model= VectorStoreRetrival()
-db_model.create_db(Markdown_data)
 
 
-#takes context and query to give appropriate response
-llm_model = QueryLLM()
-while(True):
-    query = input()
-    context= db_model.retrieve_data(query)
-    response = llm_model.query_llm(context,query)
-    print(response.content)
+
+
+
+
+
+
+
+
+
+    
+
+
+
+    
 
 
 

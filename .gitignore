@@ -38,7 +38,7 @@ dist/
 *.egg-info/
 
 #test files
-test2.py
+test.py
 
 #virtual env
 .env

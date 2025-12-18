@@ -1,5 +1,7 @@
-from docling.document_converter import DocumentConverter
+from docling.document_converter import DocumentConverter 
+from docling.datamodel.document import DocumentStream
 from langchain_text_splitters import MarkdownTextSplitter, RecursiveCharacterTextSplitter
+from io import BytesIO
 
 
 class MarkdownChunker:
@@ -52,8 +54,24 @@ class MarkdownChunker:
             " "                        # final fallback (rarely used)
         ]
 
-    def convert_to_chunks(self,pdf):
-        result = self.converter.convert(pdf)
+    def convert_to_chunks(self,pdf_file):
+        pdf_file.seek(0)
+
+        # 2️⃣ Read bytes ONCE
+        pdf_bytes = pdf_file.read()
+
+        # 3️⃣ Convert bytes → BytesIO
+        pdf_stream = BytesIO(pdf_bytes)
+
+        # 4️⃣ Create DocumentStream for Docling
+        doc = DocumentStream(
+            name=pdf_file.name,
+            stream=pdf_stream
+        )
+
+        # 5️⃣ Convert using Docling
+        converter = DocumentConverter()
+        result = converter.convert(doc)
         markdown_form = result.document.export_to_markdown()
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=800,
@@ -64,6 +82,3 @@ class MarkdownChunker:
         return chunks
 
 
-datum_doc_chunk = MarkdownChunker()
-chunks = datum_doc_chunk.convert_to_chunks("datum_doc.pdf")
-print(chunks)
