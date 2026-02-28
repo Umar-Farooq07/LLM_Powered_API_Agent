@@ -70,8 +70,7 @@ class MarkdownChunker:
         )
 
         # 5️⃣ Convert using Docling
-        converter = DocumentConverter()
-        result = converter.convert(doc)
+        result = self.converter.convert(doc)
         markdown_form = result.document.export_to_markdown()
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=800,
@@ -80,5 +79,6 @@ class MarkdownChunker:
         )
         chunks= splitter.split_text(markdown_form)
         return chunks
+
 
 
