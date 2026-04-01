@@ -3,7 +3,6 @@ uvicorn
 python-multipart
 python-dotenv
 pydantic
-docker
 docling
 docling-core
 langchain

@@ -10,7 +10,7 @@ from chunking import MarkdownChunker
 from StoringRetrieval import VectorStoreRetrival
 from LLM import QueryLLM
 
-import docker
+
 import tempfile
 
 
@@ -29,12 +29,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- GLOBAL STATE ---
-print("⏳ Loading AI Models... (This may take a moment)")
-global_chunker = MarkdownChunker()
-global_vdb = VectorStoreRetrival()
-global_llm = QueryLLM()
-print("✅ Models Loaded! Server is ready.")
+# --- GLOBAL STATE (LAZY LOADING) ---
+global_chunker = None
+global_vdb = None
+global_llm = None
+
+def load_models():
+    global global_chunker, global_vdb, global_llm
+    if global_chunker is None: # Only download if not already loaded
+        print("⏳ First request detected! Downloading & Loading AI Models...")
+        global_chunker = MarkdownChunker()
+        global_vdb = VectorStoreRetrival()
+        global_llm = QueryLLM()
+        print("✅ Models Loaded successfully!")
 
 # --- HELPER CLASSES ---
 class RagEngine:
@@ -76,6 +83,7 @@ def process_llm_response(full_response: str):
 
 @app.post("/upload")
 async def upload_pdf(pdf: UploadFile = File(...)):
+    load_models()
     if pdf.content_type != "application/pdf":
         raise HTTPException(status_code=400, detail="Only PDF files allowed")
 
@@ -96,6 +104,7 @@ async def upload_pdf(pdf: UploadFile = File(...)):
 
 @app.post("/chat")
 def chat(query: ChatMessage):
+    load_models()
     try:
         engine = RagEngine(global_vdb, global_llm)
         raw_output = engine.ask(query.text)
