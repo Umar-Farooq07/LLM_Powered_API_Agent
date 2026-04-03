@@ -24,7 +24,7 @@ function RagInterface() {
     formData.append("pdf", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/upload", { method: "POST", body: formData });
+      const res = await fetch("https://llm-powered-api-agent-n7g7.onrender.com/upload", { method: "POST", body: formData });
       if (res.ok) {
         setDocDetails(prev => ({ ...prev, status: "✅ Indexed & Ready" }));
       } else {
@@ -47,7 +47,7 @@ function RagInterface() {
 
     try {
       // 1. Send Request
-      const res = await fetch("http://127.0.0.1:5000/chat", {
+      const res = await fetch("https://llm-powered-api-agent-n7g7.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -95,7 +95,7 @@ function RagInterface() {
     }
 
     try {
-      const res = await fetch("http://127.0.0.1:5000/run-code", {
+      const res = await fetch("https://llm-powered-api-agent-n7g7.onrender.com/run-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

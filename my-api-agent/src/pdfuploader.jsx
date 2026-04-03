@@ -23,7 +23,7 @@ export default function PdfUploader() {
     try {
       setUploading(true);
 
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch("https://llm-powered-api-agent-n7g7.onrender.com/upload", {
         method: "POST",
         body: formData,
       });
