@@ -6,9 +6,7 @@ import os
 import re 
 
 
-from chunking import MarkdownChunker
-from StoringRetrieval import VectorStoreRetrival
-from LLM import QueryLLM
+
 
 
 import tempfile
@@ -38,6 +36,9 @@ def load_models():
     global global_chunker, global_vdb, global_llm
     if global_chunker is None: # Only download if not already loaded
         print("⏳ First request detected! Downloading & Loading AI Models...")
+        from chunking import MarkdownChunker
+        from StoringRetrieval import VectorStoreRetrival
+        from LLM import QueryLLM
         global_chunker = MarkdownChunker()
         global_vdb = VectorStoreRetrival()
         global_llm = QueryLLM()
