@@ -11,16 +11,22 @@ from langchain_huggingface import HuggingFaceEndpoint,ChatHuggingFace
 from langchain_core.prompts import PromptTemplate
 from langchain_core.messages import SystemMessage,AIMessage,HumanMessage
 
+import torch
+print(torch.cuda.is_available())
 
-embedding_model = HuggingFaceEmbeddings(
-    model_name= "sentence-transformers/all-MiniLM-L6-v2"
-)
+
+
+
 
 
 
 class VectorStoreRetrival:
 
     def __init__(self):
+        embedding_model = HuggingFaceEmbeddings(
+            model_name= "sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={"device": "cuda"}
+        )
 
         #Gives unique Id to chat 
         existing = os.listdir("vector_store")
